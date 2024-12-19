@@ -49,5 +49,47 @@
 (define-constant ERR-INVENTORY-FULL (err u5))
 (define-constant ERR-INSUFFICIENT-ENERGY (err u6))
 
+;; Utility Variables
+(define-data-var last-token-id uint u0)
+(define-data-var total-characters uint u0)
+
+;; Character Creation with Enhanced Metadata
+(define-public (mint-character (character-name (string-ascii 50)))
+  (let 
+    (
+      (new-token-id (+ (var-get last-token-id) u1))
+    )
+    (try! (nft-mint? GameCharacter new-token-id tx-sender))
+    
+    ;; Set initial character stats
+    (map-set character-stats 
+      {token-id: new-token-id}
+      {
+        level: u1, 
+        experience: u0, 
+        health: u100, 
+        strength: u10,
+        energy: u100,
+        last-activity: stacks-block-height
+      }
+    )
+    
+    ;; Initialize empty inventory
+    (map-set character-inventory
+      {token-id: new-token-id}
+      {
+        items: (list),
+        equipped-weapon: none,
+        equipped-armor: none
+      }
+    )
+    
+    ;; Update tracking variables
+    (var-set last-token-id new-token-id)
+    (var-set total-characters (+ (var-get total-characters) u1))
+    
+    (ok new-token-id)
+  )
+)
 
 
