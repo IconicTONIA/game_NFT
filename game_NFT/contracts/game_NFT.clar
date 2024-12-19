@@ -41,6 +41,13 @@
 (define-constant CONTRACT-OWNER tx-sender)
 (define-constant ENERGY-COOLDOWN-PERIOD u3600) ;; 1 hour
 
+;; Error Codes (Expanded)
+(define-constant ERR-NOT-OWNER (err u1))
+(define-constant ERR-MAX-LEVEL (err u2))
+(define-constant ERR-INSUFFICIENT-XP (err u3))
+(define-constant ERR-INVALID-ITEM (err u4))
+(define-constant ERR-INVENTORY-FULL (err u5))
+(define-constant ERR-INSUFFICIENT-ENERGY (err u6))
 
 
 
