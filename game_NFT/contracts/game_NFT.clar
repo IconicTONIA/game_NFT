@@ -35,4 +35,12 @@
   }
 )
 
+;; Game Configuration Constants
+(define-constant MAX-LEVEL u100)
+(define-constant BASE-XP-REQUIREMENT u100)
+(define-constant CONTRACT-OWNER tx-sender)
+(define-constant ENERGY-COOLDOWN-PERIOD u3600) ;; 1 hour
+
+
+
 
