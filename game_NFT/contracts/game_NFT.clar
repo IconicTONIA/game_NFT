@@ -3,6 +3,17 @@
 (define-non-fungible-token GameCharacter uint)
 (define-non-fungible-token GameItem uint)
 
+(define-constant TRANSFER-FEE-PERCENTAGE u5) ;; 5% transfer fee
+(define-constant ROYALTY-PERCENTAGE u10) ;; 10% royalty on secondary sales
+
+;; Add pausable functionality
+(define-data-var contract-paused bool false)
+
+;; Add whitelist for minting
+(define-map minting-whitelist {address: principal} {is-whitelisted: bool})
+
+(define-map admin-roles {address: principal} {is-admin: bool})
+
 ;; Persistent Storage
 (define-map character-stats 
   {token-id: uint}
@@ -89,6 +100,23 @@
     (var-set total-characters (+ (var-get total-characters) u1))
     
     (ok new-token-id)
+  )
+)
+
+(define-constant CHARACTER-RARITY-TIERS 
+  {
+    common: u1, 
+    rare: u2, 
+    epic: u3, 
+    legendary: u4
+  }
+)
+
+(define-public (add-admin (new-admin principal))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (map-set admin-roles {address: new-admin} {is-admin: true})
+    (ok true)
   )
 )
 
