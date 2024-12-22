@@ -128,6 +128,22 @@
   )
 )
 
+(define-public (toggle-contract-pause)
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (var-set contract-paused (not (var-get contract-paused)))
+    (ok (var-get contract-paused))
+  )
+)
+
+(define-public (add-to-whitelist (address principal))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (map-set minting-whitelist {address: address} {is-whitelisted: true})
+    (ok true)
+  )
+)
+
 
 
 
