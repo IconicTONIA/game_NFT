@@ -120,4 +120,14 @@
   )
 )
 
+(define-public (remove-admin (admin principal))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (map-set admin-roles {address: admin} {is-admin: false})
+    (ok true)
+  )
+)
+
+
+
 
