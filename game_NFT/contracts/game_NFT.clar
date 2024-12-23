@@ -200,3 +200,15 @@
     proposal-status: (string-ascii 20)
   }
 )
+
+(define-map character-staking
+  {
+    token-id: uint,
+    staker: principal
+  }
+  {
+    stake-start-block: uint,
+    rewards-accumulated: uint,
+    is-active: bool
+  }
+)
