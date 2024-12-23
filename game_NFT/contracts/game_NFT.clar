@@ -186,3 +186,17 @@
     max-actions: (optional uint)
   }
 )
+
+(define-map governance-proposals
+  {
+    proposal-id: uint,
+    proposer: principal
+  }
+  {
+    proposal-type: (string-ascii 30),
+    votes-for: uint,
+    votes-against: uint,
+    execution-block: uint,
+    proposal-status: (string-ascii 20)
+  }
+)
