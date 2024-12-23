@@ -157,5 +157,14 @@
 );; [NEW] Set token URI for specific token
 
 
+;; [NEW] Provenance and ownership tracking
+(define-map token-provenance 
+  {token-id: uint} 
+  {
+    original-creator: principal,
+    creation-block: uint,
+    transfer-history: (list 10 principal)
+  }
+)
 
 
