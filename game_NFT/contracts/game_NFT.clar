@@ -249,3 +249,13 @@
     bridge-contract: (optional principal)
   }
 )
+
+;; [NEW] Dynamic Rarity Scoring System
+(define-map character-rarity-score
+  {token-id: uint}
+  {
+    base-rarity: uint,
+    dynamic-multiplier: uint,
+    last-updated-block: uint
+  }
+)
