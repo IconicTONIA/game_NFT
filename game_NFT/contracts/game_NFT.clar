@@ -3,6 +3,8 @@
 (define-non-fungible-token GameCharacter uint)
 (define-non-fungible-token GameItem uint)
 
+;; [NEW] Metadata URI for NFT
+(define-map token-uri {token-id: uint} {uri: (string-ascii 256)})
 (define-constant TRANSFER-FEE-PERCENTAGE u5) ;; 5% transfer fee
 (define-constant ROYALTY-PERCENTAGE u10) ;; 10% royalty on secondary sales
 
@@ -143,6 +145,16 @@
     (ok true)
   )
 )
+
+
+;; [NEW] Set token URI for specific token
+(define-public (set-token-uri (token-id uint) (uri (string-ascii 256)))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (map-set token-uri {token-id: token-id} {uri: uri})
+    (ok true)
+  )
+);; [NEW] Set token URI for specific token
 
 
 
