@@ -271,3 +271,24 @@
     })
   }
 )
+
+;; Comprehensive Character Validation
+(define-read-only (validate-character (token-id uint))
+  (let 
+    (
+      (stats (map-get? character-stats {token-id: token-id}))
+      (inventory (map-get? character-inventory {token-id: token-id}))
+      (provenance (map-get? token-provenance {token-id: token-id}))
+    )
+    (if (and 
+          (is-some stats)
+          (is-some inventory)
+          (is-some provenance)
+        )
+        (ok true)
+        (err ERR-INVALID-ITEM)
+    )
+  )
+)
+
+
