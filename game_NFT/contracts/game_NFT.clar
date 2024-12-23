@@ -221,3 +221,22 @@
     modification-level: uint
   }
 )
+
+(define-map contract-events
+  {event-id: uint}
+  {
+    event-type: (string-ascii 30),
+    event-data: (string-ascii 200),
+    timestamp: uint,
+    initiator: principal
+  }
+)
+
+(define-map character-insurance
+  {token-id: uint}
+  {
+    is-insured: bool,
+    insurance-value: uint,
+    expiration-block: uint
+  }
+)
