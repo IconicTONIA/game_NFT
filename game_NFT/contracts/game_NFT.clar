@@ -167,4 +167,11 @@
   }
 )
 
-
+(define-map contract-upgrades
+  {version: uint}
+  {
+    implementation-address: principal,
+    upgrade-timestamp: uint,
+    upgrade-description: (string-ascii 100)
+  }
+)
