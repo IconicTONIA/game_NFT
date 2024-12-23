@@ -3,6 +3,8 @@
 (define-non-fungible-token GameCharacter uint)
 (define-non-fungible-token GameItem uint)
 
+;; [NEW] Metadata URI for NFT
+(define-map token-uri {token-id: uint} {uri: (string-ascii 256)})
 (define-constant TRANSFER-FEE-PERCENTAGE u5) ;; 5% transfer fee
 (define-constant ROYALTY-PERCENTAGE u10) ;; 10% royalty on secondary sales
 
@@ -128,6 +130,165 @@
   )
 )
 
+(define-public (toggle-contract-pause)
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (var-set contract-paused (not (var-get contract-paused)))
+    (ok (var-get contract-paused))
+  )
+)
 
+(define-public (add-to-whitelist (address principal))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (map-set minting-whitelist {address: address} {is-whitelisted: true})
+    (ok true)
+  )
+)
+
+
+;; [NEW] Set token URI for specific token
+(define-public (set-token-uri (token-id uint) (uri (string-ascii 256)))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (map-set token-uri {token-id: token-id} {uri: uri})
+    (ok true)
+  )
+);; [NEW] Set token URI for specific token
+
+
+;; [NEW] Provenance and ownership tracking
+(define-map token-provenance 
+  {token-id: uint} 
+  {
+    original-creator: principal,
+    creation-block: uint,
+    transfer-history: (list 10 principal)
+  }
+)
+
+(define-map contract-upgrades
+  {version: uint}
+  {
+    implementation-address: principal,
+    upgrade-timestamp: uint,
+    upgrade-description: (string-ascii 100)
+  }
+)
+
+(define-map role-permissions
+  {
+    role: (string-ascii 20),
+    permission: (string-ascii 50)
+  }
+  {
+    allowed: bool,
+    max-actions: (optional uint)
+  }
+)
+
+(define-map governance-proposals
+  {
+    proposal-id: uint,
+    proposer: principal
+  }
+  {
+    proposal-type: (string-ascii 30),
+    votes-for: uint,
+    votes-against: uint,
+    execution-block: uint,
+    proposal-status: (string-ascii 20)
+  }
+)
+
+(define-map character-staking
+  {
+    token-id: uint,
+    staker: principal
+  }
+  {
+    stake-start-block: uint,
+    rewards-accumulated: uint,
+    is-active: bool
+  }
+)
+
+(define-map nft-components
+  {token-id: uint}
+  {
+    base-character: uint,
+    attachments: (list 5 uint),
+    modification-level: uint
+  }
+)
+
+(define-map contract-events
+  {event-id: uint}
+  {
+    event-type: (string-ascii 30),
+    event-data: (string-ascii 200),
+    timestamp: uint,
+    initiator: principal
+  }
+)
+
+(define-map character-insurance
+  {token-id: uint}
+  {
+    is-insured: bool,
+    insurance-value: uint,
+    expiration-block: uint
+  }
+)
+
+(define-map cross-chain-registry
+  {token-id: uint}
+  {
+    original-chain: (string-ascii 20),
+    target-chains: (list 5 (string-ascii 20)),
+    bridge-contract: (optional principal)
+  }
+)
+
+;; Dynamic Rarity Scoring System
+(define-map character-rarity-score
+  {token-id: uint}
+  {
+    base-rarity: uint,
+    dynamic-multiplier: uint,
+    last-updated-block: uint
+  }
+)
+
+;; Fractional NFT Ownership
+(define-map fractional-ownership
+  {token-id: uint}
+  {
+    total-shares: uint,
+    share-holders: (list 10 {
+      owner: principal, 
+      shares: uint
+    })
+  }
+)
+
+;; Comprehensive Character Validation
+(define-read-only (validate-character (token-id uint))
+  (let 
+    (
+      (stats (map-get? character-stats {token-id: token-id}))
+      (inventory (map-get? character-inventory {token-id: token-id}))
+      (provenance (map-get? token-provenance {token-id: token-id}))
+    )
+    (if (and 
+          (is-some stats)
+          (is-some inventory)
+          (is-some provenance)
+        )
+        (ok true)
+        (err ERR-INVALID-ITEM)
+    )
+  )
+)
 
 
