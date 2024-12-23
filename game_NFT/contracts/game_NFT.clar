@@ -240,3 +240,12 @@
     expiration-block: uint
   }
 )
+
+(define-map cross-chain-registry
+  {token-id: uint}
+  {
+    original-chain: (string-ascii 20),
+    target-chains: (list 5 (string-ascii 20)),
+    bridge-contract: (optional principal)
+  }
+)
