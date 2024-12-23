@@ -212,3 +212,12 @@
     is-active: bool
   }
 )
+
+(define-map nft-components
+  {token-id: uint}
+  {
+    base-character: uint,
+    attachments: (list 5 uint),
+    modification-level: uint
+  }
+)
