@@ -175,3 +175,14 @@
     upgrade-description: (string-ascii 100)
   }
 )
+
+(define-map role-permissions
+  {
+    role: (string-ascii 20),
+    permission: (string-ascii 50)
+  }
+  {
+    allowed: bool,
+    max-actions: (optional uint)
+  }
+)
